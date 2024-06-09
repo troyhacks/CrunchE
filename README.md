@@ -13,6 +13,6 @@ DIY Build Parts:
 	4 LEDs + Required Resistors
 
 Usage:
-Top 4 buttons are Function buttons, the rest are not trigger / selection.
+Top 4 buttons are Function buttons, the rest are note triggers / selection.
 For example, pressing F1 and then any of the buttons in the bottom 3 rows will switch instrumets,
-F3 + any other function button will switch tracks, F4 will play and stop the track.  Full instructions coming soon, have fun exploring!
+F3 + any other function button will switch tracks, F4 will pause and resume playback.  Full instructions coming soon, have fun exploring!
