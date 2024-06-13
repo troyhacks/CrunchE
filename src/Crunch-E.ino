@@ -65,7 +65,8 @@ void loop() {
   }
 
   if (trackCommand != ' ') {
-    tracker.SetCommand(trackCommand, trackCommandArgument);1
+    tracker.SetCommand(trackCommand, trackCommandArgument);
+  }
 
   int32_t sample = tracker.UpdateTracker();
   sample /= 5;
