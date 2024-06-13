@@ -21,24 +21,26 @@ char keys[ROWS][COLS] = {
   { 'E', 'F', 'G', 'H' },
   { 'A', 'B', 'C', 'D' }
 };
-
-byte rowPins[ROWS] = { 11, 10, 9, 8 };     //connect to the row pinouts of the keypad
-byte colPins[COLS] = { 12, 13, 14, 15 };  //connect to the column pinouts of the keypad
+  
+byte rowPins[ROWS] = { 23, 22, 21, 15 };  //connect to the row pinouts of the keypad
+byte colPins[COLS] = {  5, 25, 18, 12 };  //connect to the column pinouts of the keypad
 Keypad keypad = Keypad(makeKeymap(keys), rowPins, colPins, ROWS, COLS);
 
 float lastMillis;
 char oldChar;
 //i2s sound
-#include <I2S.h>
-const int sampleRate = 22000;  // sample rate in Hz
+#include "I2S.h"
+const int sampleRate = 22050;  // sample rate in Hz 
 
 void setup() {
+  Serial.begin(115200);
+  delay(100);
   lastMillis = millis();
  
   //setup I2S pins
-  I2S.setDataPin(7);
-  I2S.setSckPin(6);//blc
-  I2S.setFsPin(5);//lrc
+  I2S.setDataPin(10);
+  I2S.setSckPin(2);//blc
+  I2S.setFsPin(9);//lrc
 
   if (!I2S.begin(I2S_PHILIPS_MODE, sampleRate, 16)) {
     Serial.println("Failed to initialize I2S!");
@@ -49,23 +51,26 @@ void setup() {
 }
 
 void loop() {
-  inputManager.UpdateInput(keypad.getKey());
+  char mykey = keypad.getKey();
+  inputManager.UpdateInput(mykey);
   char note = inputManager.note;
   char trackCommand = inputManager.trackCommand;
   int trackCommandArgument = inputManager.trackCommandArgument;
   char ledCommand = inputManager.ledCommand;
+
+  // if (mykey) Serial.printf("key=%c\n", mykey);
 
   if (ledCommand != ' ') {
     ledManager.SetCommand(ledCommand);
   }
 
   if (trackCommand != ' ') {
-    tracker.SetCommand(trackCommand, trackCommandArgument);
-  }
+    tracker.SetCommand(trackCommand, trackCommandArgument);1
 
-  int sample = tracker.UpdateTracker();
+  int32_t sample = tracker.UpdateTracker();
   sample /= 5;
  
+  I2S.write(sample);
   I2S.write(sample);
   I2S.write(sample);
 
