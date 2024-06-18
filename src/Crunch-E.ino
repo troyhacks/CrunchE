@@ -1,7 +1,7 @@
 #include <Arduino.h>
 
 #include "LedManager.h"
-LedManager ledManager = LedManager(1, 2, 3, 4);
+LedManager ledManager = LedManager(1,2,3,4);
 
 #include "InputManager.h"
 InputManager inputManager = InputManager();
@@ -22,8 +22,8 @@ char keys[ROWS][COLS] = {
   { 'A', 'B', 'C', 'D' }
 };
   
-byte rowPins[ROWS] = { 23, 22, 21, 15 };  //connect to the row pinouts of the keypad
-byte colPins[COLS] = {  5, 25, 18, 12 };  //connect to the column pinouts of the keypad
+byte rowPins[ROWS] = {  6,  7, 10, 12 };  //connect to the row pinouts of the keypad
+byte colPins[COLS] = {  4,  5,  8, 13 };  //connect to the column pinouts of the keypad
 Keypad keypad = Keypad(makeKeymap(keys), rowPins, colPins, ROWS, COLS);
 
 float lastMillis;
@@ -34,20 +34,21 @@ const int sampleRate = 22050;  // sample rate in Hz
 
 void setup() {
   Serial.begin(115200);
-  delay(100);
+  delay(1000);
+  Serial.println("Crunch-E Starting!");
   lastMillis = millis();
  
   //setup I2S pins
-  I2S.setDataPin(10);
-  I2S.setSckPin(2);//blc
-  I2S.setFsPin(9);//lrc
+  I2S.setDataPin(2);
+  I2S.setSckPin(3);//blc
+  I2S.setFsPin(1);//lrc
 
   if (!I2S.begin(I2S_PHILIPS_MODE, sampleRate, 16)) {
     Serial.println("Failed to initialize I2S!");
-    while (1) ;
+    while (1);
      
   }
-
+  
 }
 
 void loop() {
@@ -58,7 +59,7 @@ void loop() {
   int trackCommandArgument = inputManager.trackCommandArgument;
   char ledCommand = inputManager.ledCommand;
 
-  // if (mykey) Serial.printf("key=%c\n", mykey);
+  if (mykey) Serial.printf("key=%c\n", mykey);
 
   if (ledCommand != ' ') {
     ledManager.SetCommand(ledCommand);
@@ -73,7 +74,7 @@ void loop() {
  
   I2S.write(sample);
   I2S.write(sample);
-  I2S.write(sample);
+  // I2S.write(sample);
 
   int tempoBlink = tracker.tempoBlink;
   if (tempoBlink > 0)

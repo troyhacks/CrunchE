@@ -371,6 +371,7 @@ float Voice::GetVolumeRatio() {
       return (.5 + abs(env) * .5);
       break;
   }
+  return 0;
 }
 
 void Voice::SetNote(int val, bool delay, int optOctave, int optInstrument) {
